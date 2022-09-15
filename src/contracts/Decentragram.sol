@@ -4,6 +4,8 @@ contract Decentragram {
   string public name = "Decentragram";
 
   //Store images
+
+  uint public imageCount = 0;
   mapping(uint => Image) public images;
   
   struct Image {
@@ -14,13 +16,26 @@ contract Decentragram {
     address payable author;
   }
 
-
+  event ImageCreated(
+    uint id,
+    string hash,
+    string description,
+    uint tipAmount,
+    address payable author
+  );
   
   //Create images
 
-  function uploadImage() public {
-    images[1] = Image(1,'abc123','Hello, World!',0,address(0x0));
+  function uploadImage(string memory _imgHash, string memory _description) public {
+    //Increment image id
+    imageCount++;
+
+    //Add image to contract
+    images[imageCount] = Image(imageCount,_imgHash,_description,0,msg.sender);
   }
 
-  //Tip images
+    //Trigger an event
+    emit ImageCreated(imageCount,_imgHash,_description,0,msg.sender);
+    
+    //Tip images
 }
