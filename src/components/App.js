@@ -32,12 +32,29 @@ class App extends Component {
     // Load account
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
+    const networkId = await web3.eth.net.getId()
+    const networkData  = Decentragram.networks[networkId]
+    if(networkData){
+      const decentragram = new web3.eth.Contract(Decentragram.abi, networkData.address)
+      this.setState({ decentragram })
+      const imagesCount = await decentragram.methods.imageCount().call()
+      this.setState({ imagesCount })
+
+      
+    }
+    else{
+      window.alert('Decentragram contract not deployed to detected network.')
+    }
   }
+
 
   constructor(props) {
     super(props)
     this.state = {
       account: '',
+      decentragram: null,
+      images: [],
+      loading: true
     }
   }
 
